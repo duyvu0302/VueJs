@@ -1,19 +1,45 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <HelloWorld test="hehehe" msg="Welcome to Your Vue.js App" /> -->
+    <!-- <Home test="hehehe" msg="Welcome to Your Vue.js App" /> -->
+    <Todo :data="listTask" test="hehehe" msg="Welcome to Your Vue.js App" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+// import HelloWorld from "./components/HelloWorld.vue";
+// import Home from "./components/home.vue";
+import Todo from "./components/todo.vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    // HelloWorld,
+    // Home,
+    Todo,
+  },
+  data() {
+    return {
+      listTask: [
+        {
+          title: "Thu hai",
+          id: 1,
+        },
+        {
+          title: "Thu ba",
+          id: 2,
+        },
+        {
+          title: "Thu 4",
+          id: 3,
+        },
+        {
+          title: "Thu 5",
+          id: 4,
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <style>
