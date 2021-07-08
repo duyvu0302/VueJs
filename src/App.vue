@@ -1,48 +1,30 @@
 <template>
   <div id="app">
-    <!-- <HelloWorld test="hehehe" msg="Welcome to Your Vue.js App" /> -->
-    <!-- <Home test="hehehe" msg="Welcome to Your Vue.js App" /> -->
-    <Todo :data="listTask" test="hehehe" msg="Welcome to Your Vue.js App" />
+    <DefaultLayout>
+      <router-view />
+    </DefaultLayout>
   </div>
 </template>
 
 <script>
 // import HelloWorld from "./components/HelloWorld.vue";
 // import Home from "./components/home.vue";
-import Todo from "./components/todo.vue";
+// import ListTodo from "./components/listToDoVuex.vue";
+import DefaultLayout from "./layouts/DefaultLayout.vue";
+
 export default {
   name: "App",
+
   components: {
     // HelloWorld,
     // Home,
-    Todo,
-  },
-  data() {
-    return {
-      listTask: [
-        {
-          title: "Thu hai",
-          id: 1,
-        },
-        {
-          title: "Thu ba",
-          id: 2,
-        },
-        {
-          title: "Thu 4",
-          id: 3,
-        },
-        {
-          title: "Thu 5",
-          id: 4,
-        },
-      ],
-    };
+    // ListTodo,
+    DefaultLayout,
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -50,5 +32,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  a {
+    text-decoration: none;
+    color: #eee;
+  }
 }
 </style>

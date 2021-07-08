@@ -7,7 +7,7 @@
     <input type="text" v-model="name" />
     <p v-on:click="name = 'hahA'">click</p>
     <p>{{ name }}</p> -->
-    <select v-model="selected">
+    <!-- <select v-model="selected">
       <option disabled value="">Please select one</option>
       <option value="1">A</option>
       <option>B</option>
@@ -22,6 +22,10 @@
     <label for="mike">Mike</label>
     <br />
     <span>Checked names: {{ checkedNames }}</span>
+  </div> -->
+    <router-link :to="{ name: 'HelloWorld' }">Home</router-link>
+    <router-link to="/">About</router-link>
+    <router-view> </router-view>
   </div>
 </template>
 
