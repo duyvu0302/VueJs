@@ -1,48 +1,20 @@
 <template>
   <div id="app">
-    <!-- <HelloWorld test="hehehe" msg="Welcome to Your Vue.js App" /> -->
-    <!-- <Home test="hehehe" msg="Welcome to Your Vue.js App" /> -->
-    <Todo :data="listTask" test="hehehe" msg="Welcome to Your Vue.js App" />
+    <component :is="this.$route.meta.layout || 'div'">
+      <transition name="component-fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
+    </component>
   </div>
 </template>
 
 <script>
-// import HelloWorld from "./components/HelloWorld.vue";
-// import Home from "./components/home.vue";
-import Todo from "./components/todo.vue";
 export default {
   name: "App",
-  components: {
-    // HelloWorld,
-    // Home,
-    Todo,
-  },
-  data() {
-    return {
-      listTask: [
-        {
-          title: "Thu hai",
-          id: 1,
-        },
-        {
-          title: "Thu ba",
-          id: 2,
-        },
-        {
-          title: "Thu 4",
-          id: 3,
-        },
-        {
-          title: "Thu 5",
-          id: 4,
-        },
-      ],
-    };
-  },
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -50,5 +22,18 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  a {
+    text-decoration: none;
+    color: #eee;
+  }
+}
+
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.component-fade-enter, .component-fade-leave-to
+/* .component-fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
