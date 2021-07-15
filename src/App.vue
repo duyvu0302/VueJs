@@ -8,10 +8,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "App",
-};
+<script lang="ts">
+import { Vue } from "vue-property-decorator";
+
+export default class App extends Vue {}
 </script>
 
 <style lang="scss">
@@ -22,18 +22,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  a {
-    text-decoration: none;
-    color: #eee;
-  }
-}
-
-.component-fade-enter-active,
-.component-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.component-fade-enter, .component-fade-leave-to
-/* .component-fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
 }
 </style>

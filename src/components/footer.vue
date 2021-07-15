@@ -7,8 +7,6 @@
   </footer>
 </template>
 <script>
-import { myMixin } from "../mixins/ex.js";
-
 export default {
   data() {
     return {
@@ -19,7 +17,6 @@ export default {
     console.log("mixin components");
     console.log(this.message);
   },
-  mixins: [myMixin],
 
   directives: {
     red: {

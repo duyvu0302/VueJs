@@ -1,11 +1,12 @@
 <template>
   <div class="container">
-    <div class="text-center">
+    <!-- <div class="text-center">
       <b-spinner variant="primary" v-if="loading"></b-spinner>
-    </div>
-    <b-button @click="handleChangeFilter" class="btn btn-primary">
-      Filter Task Completed
-    </b-button>
+    </div> -->
+    <!-- <b-button @click="handleChangeFilter" class="btn btn-primary"> -->
+    `
+    <!-- Filter Task Completed
+    </b-button>` -->
     <div class="row">
       <div class="col-lg-9">
         <input
@@ -23,7 +24,7 @@
     </div>
     <div class="row">
       <div
-        v-for="(item, index) in tasks"
+        v-for="(item, index) in listTask"
         :key="index"
         :class="[item.completed ? 'active' : '', 'listTask']"
       >
@@ -73,7 +74,6 @@
       </div>
     </div>
     <b-pagination
-      @change="handleChangePagination"
       class="pt-5"
       v-model="filter.currentPage"
       :total-rows="50"
@@ -91,30 +91,33 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from "vuex";
+<script lang="ts">
 import Modal from "./modal.vue";
-export default {
-  props: {},
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { Getter, Action } from "vuex-class";
+@Component({
   components: {
     Modal,
   },
-  data() {
-    return {
-      taskContent: "",
-      type: "",
-      isChecked: "",
-      loading: true,
-      filter: {
-        currentPage: 1,
-        perPage: 5,
-        completed: null,
-      },
-      cart: [],
-      value: "",
-      title: "",
-    };
-  },
+})
+export default class TodoList extends Vue {
+  taskContent: string = "";
+  type: string = "";
+  isChecked: string = "";
+  loading: boolean = true;
+  filter = {
+    currentPage: 1,
+    perPage: 5,
+    completed: null,
+  };
+  cart = [];
+  value: string = "";
+  title: string = "";
+
+  @Getter("listTask") listTask!: any[];
+  @Action("getTask") readonly getTask!: Function;
+  @Action("createTask") readonly createTask!: Function;
+
   mounted() {
     const { currentPage, perPage } = this.filter;
     this.getTask({
@@ -123,89 +126,101 @@ export default {
     }).finally(() => {
       this.loading = false;
     });
-  },
+  }
+  handleCreateTask() {
+    this.createTask({
+      title: this.taskContent,
+      isCompleted: false,
+      quantity: 1,
+    });
+  }
+  @Watch("filter", { deep: true, immediate: false })
+  handleChangePagination(): void {
+    const { currentPage, completed } = this.filter;
+    this.getTask({ page: currentPage, isCompleted: completed });
+  }
 
-  computed: {
-    ...mapGetters({
-      tasks: "tasks",
-      taskDone: "taskDone",
-    }),
-  },
+  // mounted() {
+  //   const { currentPage, perPage } = this.filter;
+  //   this.getTask({
+  //     page: currentPage,
+  //     limit: perPage,
+  //   }).finally(() => {
+  //     this.loading = false;
+  //   });
+  // },
 
-  methods: {
-    ...mapActions(["getTask", "createTask", "completeTask"]),
-    handleCreateTask() {
-      this.taskContent &&
-        this.createTask({
-          completed: false,
-          title: this.taskContent,
-        });
-      this.taskContent = "";
-    },
-    handleCompleteTask(id, bl, title) {
-      this.completeTask({
-        id: id,
-        completed: bl,
-        title: title,
-      });
-    },
-    handleChangePagination(value) {
-      this.filter.currentPage = value;
-    },
-    handleChangeFilter() {
-      this.filter.completed = true;
-      this.filter.currentPage = 1;
-    },
-    addCart(data) {
-      this.cart = JSON.parse(localStorage.getItem("tasks"));
-      console.log(this.cart);
-      if (this.cart) {
-        let indexId = this.cart.findIndex((item) => item.id === data.id);
-        if (indexId !== -1) {
-          this.cart.splice(indexId, 1, {
-            ...data,
-            count: this.cart[indexId].count + 1,
-          });
-        } else {
-          this.cart.push(data);
-        }
-        localStorage.setItem("tasks", JSON.stringify(this.cart));
-      } else {
-        localStorage.setItem("tasks", JSON.stringify([data]));
-      }
-    },
-    changValue(value, id) {
-      this.cart = JSON.parse(localStorage.getItem("tasks"));
-      let indexId = this.cart.findIndex((item) => item.id === id);
-      let tasksInner = this.cart.find((item) => item.id === id);
-      if (indexId !== -1) {
-        this.cart.splice(indexId, 1, {
-          ...tasksInner,
-          count: parseInt(value),
-        });
-        localStorage.setItem("tasks", JSON.stringify(this.cart));
-      }
-      console.log(tasksInner.count);
-    },
-    setTitle(title) {
-      this.title = title;
-      console.log(title);
-    },
-  },
-  watch: {
-    filter: {
-      deep: true,
-      handler: function() {
-        const { currentPage, perPage, completed } = this.filter;
-        this.getTask({
-          page: currentPage,
-          limit: perPage,
-          completed,
-        });
-      },
-    },
-  },
-};
+  // methods: {
+  //   ...mapActions(["getTask", "createTask", "completeTask"]),
+  //   handleCreateTask() {
+  //     this.taskContent &&
+  //       this.createTask({
+  //         completed: false,
+  //         title: this.taskContent,
+  //       });
+  //     this.taskContent = "";
+  //   },
+  //   handleCompleteTask(id, bl, title) {
+  //     this.completeTask({
+  //       id: id,
+  //       completed: bl,
+  //       title: title,
+  //     });
+  //   },
+  //   handleChangePagination(value) {
+  //     this.filter.currentPage = value;
+  //   },
+  //   handleChangeFilter() {
+  //     this.filter.completed = true;
+  //     this.filter.currentPage = 1;
+  //   },
+  //   addCart(data) {
+  //     this.cart = JSON.parse(localStorage.getItem("tasks"));
+  //     console.log(this.cart);
+  //     if (this.cart) {
+  //       let indexId = this.cart.findIndex((item) => item.id === data.id);
+  //       if (indexId !== -1) {
+  //         this.cart.splice(indexId, 1, {
+  //           ...data,
+  //           count: this.cart[indexId].count + 1,
+  //         });
+  //       } else {
+  //         this.cart.push(data);
+  //       }
+  //       localStorage.setItem("tasks", JSON.stringify(this.cart));
+  //     } else {
+  //       localStorage.setItem("tasks", JSON.stringify([data]));
+  //     }
+  //   },
+  //   changValue(value, id) {
+  //     this.cart = JSON.parse(localStorage.getItem("tasks"));
+  //     let indexId = this.cart.findIndex((item) => item.id === id);
+  //     let tasksInner = this.cart.find((item) => item.id === id);
+  //     if (indexId !== -1) {
+  //       this.cart.splice(indexId, 1, {
+  //         ...tasksInner,
+  //         count: parseInt(value),
+  //       });
+  //       localStorage.setItem("tasks", JSON.stringify(this.cart));
+  //     }
+  //     console.log(tasksInner.count);
+  //   }
+
+  // },
+  // watch: {
+  //   filter: {
+  //     deep: true,
+  //     handler: function() {
+  //       const { currentPage, perPage, completed } = this.filter;
+  //       this.getTask({
+  //         page: currentPage,
+  //         limit: perPage,
+  //         completed,
+  //       });
+  //     },
+  //   },
+  // },
+}
 </script>
 
 <style lang="scss">

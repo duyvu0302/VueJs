@@ -23,9 +23,9 @@ const languages = {
 const messages = Object.assign(languages)
 
 Vue.use(VueI18n)
-let locale = JSON.parse(localStorage.getItem("i18n"))
+// const locale = JSON.parse(localStorage.getItem("i18n"))
 export default new VueI18n({
-  locale: process.env.VUE_APP_I18N_LOCALE || locale || "vi",
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || locale || "vi",
+  locale: process.env.VUE_APP_I18N_LOCALE ||  "vi",
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE ||  "vi",
   messages
 })

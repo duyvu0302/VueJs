@@ -4,7 +4,8 @@
 
     <Header />
     <main>
-      <slot />
+      <!-- <slot /> -->
+      <ListToDo />
     </main>
     <Foorer />
   </div>
@@ -13,10 +14,12 @@
 <script>
 import Header from "../components/header.vue";
 import Foorer from "../components/footer.vue";
+import ListToDo from "../components/listToDoVuex.vue";
 export default {
   components: {
     Header,
     Foorer,
+    ListToDo,
   },
   watch: {},
 };

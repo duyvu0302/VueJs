@@ -10,18 +10,11 @@
       v-if="type === 'modify'"
     >
       <form ref="form" @submit.stop.prevent="handleSubmit">
-        <b-form-group
-          label="Name"
-          label-for="name-input"
-          invalid-feedback="Name is required"
-          :state="nameState"
-        >
+        <b-form-group label="Name" label-for="name-input">
           <b-form-input
             id="name-input"
             :value="title"
             @change="$emit('updata', $event)"
-            :state="nameState"
-            required
           ></b-form-input>
         </b-form-group>
       </form>
@@ -32,15 +25,13 @@
       title="Submit Your Name"
       @show="resetModal"
       @hidden="resetModal"
-      @ok="handleDelete(id)"
+      @ok="handleDelete"
       v-else
     >
-      <form ref="form" @submit.stop.prevent="handleSubmit">
+      <form ref="form" @submit.prevent="handleSubmit">
         <b-form-group
           :label="`do you want delete ${title} ?`"
           label-for="name-input"
-          invalid-feedback="Name is required"
-          :state="nameState"
         >
         </b-form-group>
       </form>
@@ -48,62 +39,38 @@
   </div>
 </template>
 
-<script>
-import { mapActions } from "vuex";
+<script lang="ts">
+import { Vue, Prop, Component } from "vue-property-decorator";
+import { Getter, Action } from "vuex-class";
 
-export default {
-  props: {
-    type: String,
-    id: Number,
-    title: String,
-  },
-  data() {
-    return {
-      value: this.title,
-      nameState: null,
-      submittedNames: [],
-      textEdit: this.title,
-    };
-  },
+@Component
+export default class Modal extends Vue {
+  @Prop(String) readonly type!: string;
+  @Prop(Number) readonly id!: number;
+  @Prop(String) title!: string;
 
-  methods: {
-    ...mapActions(["deleteTask", "editTask"]),
-    handleDelete(id) {
-      this.deleteTask({ id: id });
-    },
-    change(e) {
-      console.log(e);
-    },
+  @Getter("listTask") listTask!: any[];
+  @Action("editTask") readonly editTask!: Function;
+  @Action("deleteTask") readonly deleteTask!: Function;
 
-    checkFormValidity() {
-      const valid = this.$refs.form.checkValidity();
-      this.nameState = valid;
-      return valid;
-    },
-    resetModal() {
-      this.name = "";
-      this.nameState = null;
-    },
-    handleOk(bvModalEvt) {
-      // Prevent modal from closing
-      bvModalEvt.preventDefault();
-
-      // Trigger submit handler
-      this.handleSubmit();
-    },
-
-    handleSubmit() {
-      this.editTask({
-        id: this.id,
-        title: this.title,
-      });
-      // Hide the modal manually
-      this.$nextTick(() => {
-        this.$bvModal.hide(`modal-prevent-closing-${this.id}`);
-      });
-    },
-  },
-};
+  handleDelete() {
+    this.deleteTask({ id: this.id });
+  }
+  handleOk() {
+    this.editTask({ id: this.id, title: this.title });
+  }
+  resetModal() {}
+  handleSubmit() {
+    // this.editTask({
+    //   id: this.id,
+    //   title: this.title,
+    // });
+    // Hide the modal manually
+    this.$nextTick(() => {
+      this.$bvModal.hide(`modal-prevent-closing-${this.id}`);
+    });
+  }
+}
 </script>
 
 <style lang="scss">
